@@ -79,21 +79,7 @@ public class App {
         */
         
         String jpg_ku4 = new File("html/ku4.jpg").getAbsolutePath();
-        //File content_jpg_ku4_file = new File(jpg_ku4);
-        byte[] content_jpg_ku4 = Files.readAllBytes(Paths.get(jpg_ku4));
-        //System.out.println(content_jpg_ku4.length);
-        //final String content_jpg_ku4 = Files.readString(Paths.get(jpg_ku4));
-
-
-        //Image image = ImageIO.read(content_jpg_ku4);
-        //System.out.println(image.toString());
-
-        //System.out.println(content_jpg_ku4);
-        //Image content_jpg_ku4 = ImageIO.read(new File(jpg_ku4));
-
-
-        //final String content_jpg_ku4 = Files.readString(Paths.get(jpg_ku4));
-
+        File content_jpg_ku4 = new File(jpg_ku4);
         
         /*
         String jpg_lc = new File("html/LC.jpg").getAbsolutePath();
@@ -112,22 +98,10 @@ public class App {
         final String content_png_head = Files.readString(Paths.get(png_head));
         */
         String png_logo = new File("html/logo.png").getAbsolutePath();
-
-        //final String content_png_logo = Files.readString(Paths.get(png_logo));
-        File content_png_logo = new File(png_logo);
-        
-
         Path path = Paths.get(png_logo);
-        //String encodedfile = new String(Base64.encodeBase64(Files.readAllBytes(path)));
-        String encodedfile = new String(Base64.encodeBase64(Files.readAllBytes(path)), "UTF-8");
-
-        //System.out.println(encodedfile);
-
-        //System.out.println(content_png_logo.toString());
-
-        //Image content_png_logo = ImageIO.read(new File(png_logo));
-       // System.out.println(content_png_logo.toString());
-        //BufferedImage content_png_logo = ImageIO.read(file_png_logo);
+        String content_png_logo = new String(Base64.encodeBase64(Files.readAllBytes(path)), "UTF-8");
+        //String encodedfile = "data:image/png;base64," + encodedfile_temp; // Added UTF-8 header
+        //System.out.println(encodedfile); // Prints the file as Base64 UTF-8
 
         /*
         String png_logo1 = new File("html/logo1.png").getAbsolutePath();
@@ -177,11 +151,10 @@ public class App {
         myServer.addRoute(GET, "/login%20page.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login_page).build());
 
         // PNG
-        myServer.addRoute(GET, "/logo.png",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/png; charset=utf-8").setEntity(encodedfile).build());
+        myServer.addRoute(GET, "/logo.png",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/png; charset=UTF-8").setEntity(content_png_logo).build());
 
         // JPG
-        //myServer.addRoute(GET, "/ku4.jpg",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/jpeg").setEntity(content_jpg_ku4).build());
-        //.addHeader("Content-Length", content_jpg_ku4.length())
+        myServer.addRoute(GET, "/ku4.jpg",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/jpeg").setEntity(content_jpg_ku4).build());
 
 
         myServer.start();

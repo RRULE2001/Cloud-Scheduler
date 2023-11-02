@@ -48,8 +48,6 @@ public class ResponseWriter {
                 outputStream.write("\r\n");
                 outputStream.write(encodedString);
             } else {
-                //outputStream.write("Accept-Ranges: " + "bytes" + "\r\n");
-                //outputStream.write("Content-Length: " + "6144" + "\r\n");
                 outputStream.write("\r\n\n");
             }
         } catch (Exception ignored) {
