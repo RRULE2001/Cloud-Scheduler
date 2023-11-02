@@ -21,10 +21,11 @@ public class HttpHandler {
     }
     public void handleConnection(final InputStream inputStream, final OutputStream outputStream) throws IOException {
         final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
-
+        
         Optional<HttpRequest> request = HttpDecoder.decode(inputStream);
         request.ifPresentOrElse((r) -> handleRequest(r, bufferedWriter), () -> handleInvalidRequest(bufferedWriter));
-
+        
+        
         bufferedWriter.close();
         inputStream.close();
     }
