@@ -79,8 +79,9 @@ public class App {
         */
         
         String jpg_ku4 = new File("html/ku4.jpg").getAbsolutePath();
-        File content_jpg_ku4 = new File(jpg_ku4);
-        
+        //File content_jpg_ku4 = new File(jpg_ku4);
+        Path path_jpg_ku4 = Paths.get(jpg_ku4);
+        String content_jpg_ku4 = new String(Base64.encodeBase64(Files.readAllBytes(path_jpg_ku4)), "UTF-8");
         /*
         String jpg_lc = new File("html/LC.jpg").getAbsolutePath();
         final String content_jpg_lc = Files.readString(Paths.get(jpg_lc));
@@ -98,10 +99,8 @@ public class App {
         final String content_png_head = Files.readString(Paths.get(png_head));
         */
         String png_logo = new File("html/logo.png").getAbsolutePath();
-        Path path = Paths.get(png_logo);
-        String content_png_logo = new String(Base64.encodeBase64(Files.readAllBytes(path)), "UTF-8");
-        //String encodedfile = "data:image/png;base64," + encodedfile_temp; // Added UTF-8 header
-        //System.out.println(encodedfile); // Prints the file as Base64 UTF-8
+        Path path_png_logo = Paths.get(png_logo);
+        String content_png_logo = new String(Base64.encodeBase64(Files.readAllBytes(path_png_logo)), "UTF-8");
 
         /*
         String png_logo1 = new File("html/logo1.png").getAbsolutePath();
@@ -151,10 +150,10 @@ public class App {
         myServer.addRoute(GET, "/login%20page.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login_page).build());
 
         // PNG
-        myServer.addRoute(GET, "/logo.png",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/png; charset=UTF-8").setEntity(content_png_logo).build());
+        myServer.addRoute(GET, "/logo.png",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/png").setEntity(content_png_logo).build());
 
         // JPG
-        myServer.addRoute(GET, "/ku4.jpg",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/jpeg").setEntity(content_jpg_ku4).build());
+        myServer.addRoute(GET, "/ku4.jpg",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "image/jpeg; charset=UTF-8").setEntity(content_jpg_ku4).build());
 
 
         myServer.start();
