@@ -25,7 +25,16 @@ public class HttpHandler {
         Optional<HttpRequest> request = HttpDecoder.decode(inputStream);
         request.ifPresentOrElse((r) -> handleRequest(r, bufferedWriter), () -> handleInvalidRequest(bufferedWriter));
         
+        // RRULE URL HANDLING FOR POST REQUESTS
+        try{
+            String query = request.get().getUri().getQuery();
+            System.out.println("query: " + query);
+        }
+        catch(Exception ignored){
+            System.out.println("query: error");
+        }
         
+
         bufferedWriter.close();
         inputStream.close();
     }
