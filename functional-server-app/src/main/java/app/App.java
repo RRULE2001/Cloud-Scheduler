@@ -38,17 +38,15 @@ public class App {
         final String content_academic_building = Files.readString(Paths.get(html_academic_building));
         String html_learning_commons    = new File("html/Learning Commons.html").getAbsolutePath();
         final String content_learning_commons = Files.readString(Paths.get(html_learning_commons));
-        String html_log_in              = new File("html/Log In.html").getAbsolutePath();
-        final String content_log_in = Files.readString(Paths.get(html_log_in));
-        String html_login_page          = new File("html/login page.html").getAbsolutePath();
-        final String content_login_page = Files.readString(Paths.get(html_login_page));
+        String html_login              = new File("html/login.html").getAbsolutePath();
+        final String content_login = Files.readString(Paths.get(html_login));
 
         InetAddress addr = InetAddress.getByName("127.0.0.1");
 
         Server myServer = new Server(80, 100, addr);
 
         // HOME ADDRESS
-        myServer.addRoute(GET, "/",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_index).build());
+        myServer.addRoute(GET, "/",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login).build());
         
         // POST REQUESTS
         myServer.addRoute(POST, "/post",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity("<HTML> <P> POST REQUEST RESPONSE </P> </HTML>").build());
@@ -64,8 +62,7 @@ public class App {
         myServer.addRoute(GET, "/Campus%20Center.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_campus_center).build());
         myServer.addRoute(GET, "/Academic%20Building.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_academic_building).build());
         myServer.addRoute(GET, "/Learning%20Commons.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_learning_commons).build());
-        myServer.addRoute(GET, "/Log%20In.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_log_in).build());
-        myServer.addRoute(GET, "/login%20page.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login_page).build());
+        myServer.addRoute(GET, "/login.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login).build());
 
         myServer.start();
         
