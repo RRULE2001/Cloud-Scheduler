@@ -49,6 +49,8 @@ public class HttpHandler {
                         {  
                             String name = param.split("=")[0];  
                             String value = param.split("=")[1];  
+                            System.out.println("name: " + name);
+                            System.out.println("value: " + value);
 
                             if(name == "room")
                             {
