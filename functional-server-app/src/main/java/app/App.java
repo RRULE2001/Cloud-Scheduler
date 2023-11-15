@@ -16,6 +16,8 @@ import static Sockets.contract.HttpMethod.POST;
 /**
  * Test functional server library.
  */
+
+
 public class App {
     public static void main(String[] args) throws IOException {
 
@@ -48,9 +50,6 @@ public class App {
         // HOME ADDRESS
         myServer.addRoute(GET, "/",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login).build());
         
-        // POST REQUESTS
-        myServer.addRoute(POST, "/post",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity("<HTML> <P> POST REQUEST RESPONSE </P> </HTML>").build());
-        
         // CSS GET REQUESTS
         myServer.addRoute(GET, "/Academic%20Building.css",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/css").setEntity(content_css_academic_building).build());
         myServer.addRoute(GET, "/Campus%20Center.css",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/css").setEntity(content_css_campus_center).build());
@@ -64,8 +63,14 @@ public class App {
         myServer.addRoute(GET, "/Learning%20Commons.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_learning_commons).build());
         myServer.addRoute(GET, "/login.html",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/html").setEntity(content_login).build());
 
+        // SQL REQUESTS
+        myServer.addRoute(POST, "/updateRoomStatus",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/plain").setEntity("Room Status Updated").build());
+        myServer.addRoute(GET, "/getRoomStatus",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/plain").setEntity("Room Status Received").build());
+        
+        
         myServer.start();
         
 
     }
 }
+ 
