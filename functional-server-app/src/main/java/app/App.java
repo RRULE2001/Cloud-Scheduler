@@ -71,6 +71,29 @@ public class App {
         myServer.start();
         
 
+        /* 
+        String DB_URL = "jdbc:mysql://localhost:3306/mydb";
+        String USER = "root";
+        String PASS = "password";
+        String QUERY = "SELECT * FROM test;";
+
+        try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(QUERY);) {
+         // Extract data from result set
+         System.out.print("Connection Made...");
+         
+         while (rs.next()) {
+            // Retrieve by column name
+            System.out.print("idtest: " + rs.getInt("idtest"));
+
+         }
+      } catch (SQLException e) {
+         e.printStackTrace();
+      } 
+      */
+
+
     }
 }
  
