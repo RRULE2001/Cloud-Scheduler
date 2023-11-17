@@ -27,7 +27,7 @@ public class HttpHandler  {
         request.ifPresentOrElse((r) -> handleRequest(r, bufferedWriter), () -> handleInvalidRequest(bufferedWriter));
 
         // RRULE URL HANDLING FOR POST REQUESTS
-        String DB_URL = "jdbc:mysql://localhost:3306/mydb";
+        String DB_URL = "jdbc:mysql://localhost:3306/mydb?allowMultiQueries=true";
         String USER = "root";
         String PASS = "password";
         String SQL_QUERY = "SELECT * FROM rooms;";
@@ -53,7 +53,7 @@ public class HttpHandler  {
 
                             if(name == "room")
                             {
-                                SQL_QUERY = "SELECT inUse FROM rooms WHERE roomName='" + value + "'";;
+                                SQL_QUERY = "SELECT inUse FROM rooms WHERE roomName='" + value + "';";
                                 System.out.println("SQL: " + SQL_QUERY);
                             }
                             
@@ -63,10 +63,15 @@ public class HttpHandler  {
                                 // Extract data from result set
                                 System.out.println("Connection Made for /getRoomStatus...");
                                 
-                                if (rs.next()) {
-                                    // Retrieve by column name
-                                    System.out.println("SQL Data: " + rs.getInt("inUse"));
+                                while (rs.next()) {
+                                    String roomName = rs.getString("roomName");
+                                    //System.out.println("roomName: " + roomName);
+                                    if(roomName.equals(value))
+                                    {
+                                        System.out.println("SQL Data: " + rs.getInt("inUse"));
+                                    }
                                 }
+
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             } 
