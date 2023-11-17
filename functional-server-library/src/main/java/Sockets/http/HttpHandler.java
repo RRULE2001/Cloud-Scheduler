@@ -10,11 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import java.sql.*;
-
 /**
  * Handle HTTP Request Response lifecycle.
  */
-public class HttpHandler {
+public class HttpHandler  {
 
     private final Map<String, RequestRunner> routes;
 
@@ -31,7 +30,7 @@ public class HttpHandler {
         String DB_URL = "jdbc:mysql://localhost:3306/mydb";
         String USER = "root";
         String PASS = "password";
-        String QUERY = "SELECT * FROM mydb;";
+        String SQL_QUERY = "SELECT * FROM rooms;";
         
         try{
             String path = request.get().getUri().getPath();
@@ -54,18 +53,19 @@ public class HttpHandler {
 
                             if(name == "room")
                             {
-                                QUERY = "SELECT " + value + " FROM mydb;";
+                                SQL_QUERY = "SELECT inUse FROM rooms WHERE roomName='" + value + "'";;
+                                System.out.println("SQL: " + SQL_QUERY);
                             }
                             
                             try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                                 Statement stmt = conn.createStatement();
-                                ResultSet rs = stmt.executeQuery(QUERY);) {
+                                ResultSet rs = stmt.executeQuery(SQL_QUERY);) {
                                 // Extract data from result set
-                                System.out.print("Connection Made for /getRoomStatus...");
+                                System.out.println("Connection Made for /getRoomStatus...");
                                 
-                                while (rs.next()) {
+                                if (rs.next()) {
                                     // Retrieve by column name
-                                    System.out.print("SQL Data: " + rs.getInt(value));
+                                    System.out.println("SQL Data: " + rs.getInt("inUse"));
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -81,14 +81,17 @@ public class HttpHandler {
                         {  
                             String name = param.split("=")[0];  
                             String value = param.split("=")[1];  
+                            System.out.println("name: " + name);
+                            System.out.println("value: " + value);
 
-                            QUERY = "INSERT INTO test (" + name + ") VALUES (" + value + ")";
-                            
+                            SQL_QUERY = "UPDATE rooms SET inUse = " + value + " WHERE roomName = '" + name + "' LIMIT 1;";
+
                             try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                                 Statement stmt = conn.createStatement();
-                                ResultSet rs = stmt.executeQuery(QUERY);) {
+                                ) {
+                                int rows = stmt.executeUpdate(SQL_QUERY);
                                 // Extract data from result set
-                                System.out.print("Connection Made for /updateRoomStatus...");
+                                System.out.println("Connection Made for /updateRoomStatus...");
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             } 
