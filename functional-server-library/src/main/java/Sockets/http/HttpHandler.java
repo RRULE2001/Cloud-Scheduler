@@ -5,6 +5,8 @@ import Sockets.pojos.HttpRequest;
 import Sockets.pojos.HttpResponse;
 import Sockets.writers.ResponseWriter;
 
+import static Sockets.contract.HttpMethod.GET;
+
 import java.io.*;
 import java.util.Map;
 import java.util.Optional;
@@ -26,90 +28,6 @@ public class HttpHandler  {
         Optional<HttpRequest> request = HttpDecoder.decode(inputStream);
         request.ifPresentOrElse((r) -> handleRequest(r, bufferedWriter), () -> handleInvalidRequest(bufferedWriter));
 
-        // RRULE URL HANDLING FOR POST REQUESTS
-        String DB_URL = "jdbc:mysql://localhost:3306/mydb?allowMultiQueries=true";
-        String USER = "root";
-        String PASS = "password";
-        String SQL_QUERY = "SELECT * FROM rooms;";
-        
-        try{
-            String path = request.get().getUri().getPath();
-            String query = request.get().getUri().getQuery();
-
-            System.out.println("path: " + path);
-            System.out.println("query: " + query);
-            switch(path){
-                case "/getRoomStatus":
-                    if(query != null)
-                    {
-                        String[] params = query.split("&"); // Break query into multiple strings 
-
-                        for (String param : params)  
-                        {  
-                            String name = param.split("=")[0];  
-                            String value = param.split("=")[1];  
-                            System.out.println("name: " + name);
-                            System.out.println("value: " + value);
-
-                            if(name == "room")
-                            {
-                                SQL_QUERY = "SELECT inUse FROM rooms WHERE roomName='" + value + "';";
-                                System.out.println("SQL: " + SQL_QUERY);
-                            }
-                            
-                            try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                                Statement stmt = conn.createStatement();
-                                ResultSet rs = stmt.executeQuery(SQL_QUERY);) {
-                                // Extract data from result set
-                                System.out.println("Connection Made for /getRoomStatus...");
-                                
-                                while (rs.next()) {
-                                    String roomName = rs.getString("roomName");
-                                    //System.out.println("roomName: " + roomName);
-                                    if(roomName.equals(value))
-                                    {
-                                        System.out.println("SQL Data: " + rs.getInt("inUse"));
-                                    }
-                                }
-
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            } 
-                        } 
-                    }
-                    break;
-
-                case "/updateRoomStatus":
-                        String[] params = query.split("&"); // Break query into multiple strings 
-
-                        for (String param : params)  
-                        {  
-                            String name = param.split("=")[0];  
-                            String value = param.split("=")[1];  
-                            System.out.println("name: " + name);
-                            System.out.println("value: " + value);
-
-                            SQL_QUERY = "UPDATE rooms SET inUse = " + value + " WHERE roomName = '" + name + "' LIMIT 1;";
-
-                            try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                                Statement stmt = conn.createStatement();
-                                ) {
-                                int rows = stmt.executeUpdate(SQL_QUERY);
-                                // Extract data from result set
-                                System.out.println("Connection Made for /updateRoomStatus...");
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            } 
-                        } 
-                    break;
-
-            }
-        }
-        catch(Exception ignored){
-            //System.out.println("query: no query");
-        }
-        
-
         bufferedWriter.close();
         inputStream.close();
     }
@@ -121,7 +39,100 @@ public class HttpHandler  {
     private void handleRequest(final HttpRequest request, final BufferedWriter bufferedWriter) {
         final String routeKey = request.getHttpMethod().name().concat(request.getUri().getRawPath());
 
-        if (routes.containsKey(routeKey)) {
+        String messageResponse = "SQL Server Error";
+
+        if(routeKey.equals("GET/getRoomStatus") || routeKey.equals("GET/updateRoomStatus") )
+        {
+            // RRULE URL HANDLING FOR POST REQUESTS
+            String DB_URL = "jdbc:mysql://localhost:3306/mydb?allowMultiQueries=true";
+            String USER = "root";
+            String PASS = "password";
+            String SQL_QUERY = "SELECT * FROM rooms;";
+            
+
+            try{
+                String path = request.getUri().getPath();
+                String query = request.getUri().getQuery();
+
+                //System.out.println("path: " + path);
+                //System.out.println("query: " + query);
+                switch(path){
+                    case "/getRoomStatus":
+                        if(query != null)
+                        {
+                            String[] params = query.split("&"); // Break query into multiple strings 
+
+                            for (String param : params)  
+                            {  
+                                String name = param.split("=")[0];  
+                                String value = param.split("=")[1];  
+                                //System.out.println("name: " + name);
+                                //System.out.println("value: " + value);
+
+                                if(name == "room")
+                                {
+                                    SQL_QUERY = "SELECT inUse FROM rooms WHERE roomName='" + value + "';";
+                                    //System.out.println("SQL: " + SQL_QUERY);
+                                }
+                                
+                                try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                                    Statement stmt = conn.createStatement();
+                                    ResultSet rs = stmt.executeQuery(SQL_QUERY);) {
+                                    // Extract data from result set
+                                    System.out.println("Connection Made for /getRoomStatus...");
+                                    
+                                    while (rs.next()) {
+                                        String roomName = rs.getString("roomName");
+                                        //System.out.println("roomName: " + roomName);
+                                        if(roomName.equals(value))
+                                        {
+                                            //System.out.println("SQL Data: " + rs.getInt("inUse"));
+                                            messageResponse = Integer.toString(rs.getInt("inUse"));
+                                        }
+                                    }
+
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                } 
+                            } 
+                        }
+                        break;
+
+                    case "/updateRoomStatus":
+                            String[] params = query.split("&"); // Break query into multiple strings 
+
+                            for (String param : params)  
+                            {  
+                                String name = param.split("=")[0];  
+                                String value = param.split("=")[1];  
+                                //System.out.println("name: " + name);
+                                //System.out.println("value: " + value);
+
+                                SQL_QUERY = "UPDATE rooms SET inUse = " + value + " WHERE roomName = '" + name + "' LIMIT 1;";
+
+                                try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                                    Statement stmt = conn.createStatement();
+                                    ) {
+                                    int rows = stmt.executeUpdate(SQL_QUERY);
+                                    // Extract data from result set
+                                    System.out.println("Connection Made for /updateRoomStatus...");
+                                    messageResponse = "SUCCESS";
+
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                } 
+                            } 
+                        break;
+
+                }
+            }
+            catch(Exception ignored){
+                //System.out.println("query: no query");
+            }
+
+            ResponseWriter.writeResponse(bufferedWriter, new HttpResponse.Builder().setStatusCode(200).setEntity(messageResponse).build());
+        }
+        else if (routes.containsKey(routeKey)) {
             ResponseWriter.writeResponse(bufferedWriter, routes.get(routeKey).run(request));
         } else {
             // Not found

@@ -17,7 +17,6 @@ import static Sockets.contract.HttpMethod.POST;
  * Test functional server library.
  */
 
-
 public class App {
     public static void main(String[] args) throws IOException {
 
@@ -66,33 +65,8 @@ public class App {
         // SQL REQUESTS
         myServer.addRoute(POST, "/updateRoomStatus",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/plain").setEntity("Room Status Updated").build());
         myServer.addRoute(GET, "/getRoomStatus",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/plain").setEntity("Room Status Received").build());
-        
-        
+
         myServer.start();
-        
-
-        /* 
-        String DB_URL = "jdbc:mysql://localhost:3306/mydb";
-        String USER = "root";
-        String PASS = "password";
-        String QUERY = "SELECT * FROM test;";
-
-        try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(QUERY);) {
-         // Extract data from result set
-         System.out.print("Connection Made...");
-         
-         while (rs.next()) {
-            // Retrieve by column name
-            System.out.print("idtest: " + rs.getInt("idtest"));
-
-         }
-      } catch (SQLException e) {
-         e.printStackTrace();
-      } 
-      */
-
 
     }
 }
