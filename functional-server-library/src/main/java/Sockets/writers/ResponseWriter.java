@@ -41,6 +41,10 @@ public class ResponseWriter {
             if (entityString.isPresent()) {
                 final String encodedString = new String(entityString.get().getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
                 outputStream.write("Content-Length: " + encodedString.getBytes().length + "\r\n");
+                outputStream.write("Access-Control-Allow-Origin: *" + "\r\n" );
+                outputStream.write("Access-Control-Allow-Methods: GET" + "\r\n");
+                outputStream.write("Access-Control-Allow-Methods: POST" + "\r\n");
+
                 outputStream.write("\r\n");
                 outputStream.write(encodedString);
             } else {

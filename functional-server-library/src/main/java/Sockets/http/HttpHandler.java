@@ -41,7 +41,7 @@ public class HttpHandler  {
 
         String messageResponse = "SQL Server Error";
 
-        if(routeKey.equals("GET/getRoomStatus") || routeKey.equals("GET/updateRoomStatus") )
+        if(routeKey.equals("GET/getRoomStatus") || routeKey.equals("POST/updateRoomStatus") )
         {
             // RRULE URL HANDLING FOR POST REQUESTS
             String DB_URL = "jdbc:mysql://localhost:3306/mydb?allowMultiQueries=true";
