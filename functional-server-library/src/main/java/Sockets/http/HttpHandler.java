@@ -116,7 +116,7 @@ public class HttpHandler  {
                                     int rows = stmt.executeUpdate(SQL_QUERY);
                                     // Extract data from result set
                                     System.out.println("Connection Made for /updateRoomStatus...");
-                                    messageResponse = "SUCCESS";
+                                    messageResponse = "Updated reservation...";
 
                                 } catch (SQLException e) {
                                     e.printStackTrace();

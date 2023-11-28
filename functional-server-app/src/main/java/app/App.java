@@ -67,6 +67,7 @@ public class App {
         myServer.addRoute(GET, "/getRoomStatus",(req) -> new HttpResponse.Builder().setStatusCode(200).addHeader("Content-Type", "text/plain").setEntity("Room Status Received").build());
 
         myServer.start();
+        
 
     }
 }
