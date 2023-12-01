@@ -25,12 +25,18 @@ a:visited {
     color: #F0F017;
   text-decoration: none;
 }
-
 a:hover {
-color: #F0F017;
   text-decoration: underline;
+  color: yellow;
 }
-
+a[href="Learning%20Commons.html"]:hover {
+  text-decoration: none;
+  color: white;
+}
 a:active {
   text-decoration: none;
+}
+
+img:not([src="logo.png"]):hover {
+  opacity: 0.5;
 }
